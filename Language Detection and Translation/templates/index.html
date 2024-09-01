@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Detection and Translation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Serif;
+            background: linear-gradient(135deg, #085081, #43035c);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #333;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        form {
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        textarea {
+            width: 90%;
+            height: 100px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+            resize: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        textarea:focus {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background: #9b59b6;
+            border: none;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #8e44ad;
+            transform: translateY(-3px);
+        }
+
+        .result-section {
+            margin-top: 20px;
+            font-size: 22px;
+            color: #2c3e50;
+            animation: popUp 0.5s ease-in-out;
+        }
+
+        @keyframes popUp {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-section h4 {
+            margin-top: 20px;
+            font-size: 1.8em;
+            color: #333;
+            animation: slideIn 1.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Language Detection and Translation</h1>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Form for language detection and translation -->
+        <form method="post" action="/trans">
+            <!-- Text input for the user to enter text -->
+            <div class="form-group">
+                <textarea class="form-control" id="text" name="text" rows="3" required placeholder="Enter text for detection and translation..."></textarea>
+            </div>
+            <!-- Dropdown to select the target language -->
+            <div class="form-group">
+                <select class="form-control" id="target_lang" name="target_lang" required>
+                    <!-- Loop through the available languages and create an option for each -->
+                    {% for lang_code, lang_name in languages.items() %}
+                        <option value="{{ lang_code }}">{{ lang_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Submit button -->
+            <input type="submit" class="btn btn-primary" value="Translate">
+        </form>
+
+        <!-- Display the detected language and translation if available -->
+        {% if translation %}
+            <div class="result-section">
+                <h4>Detected Language: {{ detected_lang }}</h4>
+                <h4 class="translation-text">Translation: {{ translation }}</h4>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
